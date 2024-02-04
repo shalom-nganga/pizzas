@@ -1,5 +1,5 @@
 from app import app, db, Pizza, Restaurant, RestaurantPizza
-# from datetime import datetime
+from datetime import datetime
 
 # Create sample data for Pizzas
 pizza1 = Pizza(name="Margherita", ingredients="Tomato, Mozzarella, Basil")
@@ -16,7 +16,7 @@ restaurant_pizza2 = RestaurantPizza(restaurant=restaurant1, pizza=pizza2, price=
 restaurant_pizza3 = RestaurantPizza(restaurant=restaurant2, pizza=pizza2, price=11)
 restaurant_pizza4 = RestaurantPizza(restaurant=restaurant2, pizza=pizza3, price=13)
 
-# Add the data to the database and commit the changes``
+# Add the data to the database and commit the changes
 with app.app_context():
     db.session.add(pizza1)
     db.session.add(pizza2)

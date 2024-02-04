@@ -1,31 +1,42 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///pizza.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 db = SQLAlchemy(app)
 
+class Pizza(db.Model):
+    __tablename__ = "pizzas"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    ingredients = db.Column(db.String, nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    updated = db.Column(db.DateTime, default=datetime.utcnow)
+
+    restaurant_pizza = db.relationship('RestaurantPizza', backref='pizza')
+
 class Restaurant(db.Model):
-    __tablename__ = 'restaurants'
+    __tablename__ = "restaurants"
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     address = db.Column(db.String, nullable=False)
 
-class Pizza(db.Model):
-    __tablename__ = 'pizzas'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(255), nullable=False)
-    ingredients = db.Column(db.String(255), nullable=False)
+    restaurant_pizza = db.relationship("RestaurantPizza", backref="restaurant")
 
 class RestaurantPizza(db.Model):
-    __tablename__ = 'restaurant_pizzas'
+    __tablename__ = "restaurant_pizzas"
+
     id = db.Column(db.Integer, primary_key=True)
-    price = db.Column(db.Float, nullable=False)
-    pizza_id = db.Column(db.Integer, db.ForeignKey('pizzas.id'), nullable=False)
-    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'), nullable=False)
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
-    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    pizza_id = db.Column(db.Integer, db.ForeignKey('pizzas.id'))
+    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'))
+    price = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated = db.Column(db.DateTime, default=datetime.utcnow)
+
 
 # add any models you may need. 
