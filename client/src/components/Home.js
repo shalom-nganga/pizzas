@@ -5,7 +5,7 @@ function Home() {
   const [restaurants, setRestaurants] = useState([]);
 
   useEffect(() => {
-    fetch("/restaurants")
+    fetch(`/restaurants`)
       .then((r) => r.json())
       .then(setRestaurants);
   }, []);
